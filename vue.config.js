@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '../SiteAssets/VueMaster',
+  /*publicPath: '../SiteAssets/VueMaster',*/
   //transpileDependencies: ['vuetify'],
   filenameHashing: false,
   chainWebpack: config => {
