@@ -1,19 +1,7 @@
 <template>
   <v-container fluid>
     <div id="categories">
-      <v-toolbar-title>Организации</v-toolbar-title>
-      <!--  <p>
-        <dropdownlist
-          :data-items="categories"
-          :data-item-key="'CategoryID'"
-          :text-field="'CategoryName'"
-          :default-item="defaultItems"
-          @change="handleDropDownChange"
-        >
-        </dropdownlist>
-        &nbsp; Selected category ID:
-        <strong>{{ this.dropdownlistCategory }}</strong>
-      </p> -->
+      <v-toolbar-title>Места проведения</v-toolbar-title>
 
       <grid
         :data-items="dataResult"
@@ -34,33 +22,20 @@
             />
           </td>
         </template>
-        <template v-slot:isRosatomTemplate="{ props }">
-          <td colspan="1">
-            <input
-              type="checkbox"
-              :checked="props.dataItem.IsRosatom"
-              disabled="disabled"
-            />
-          </td>
-        </template>
       </grid>
     </div>
   </v-container>
 </template>
 
 <script>
-//import { DropDownList } from '@progress/kendo-vue-dropdowns';
-//import categories from '../appdata/categories.json';
-//import products from '../appdata/products.json';
 import { process } from '@progress/kendo-data-query';
 import { Grid } from '@progress/kendo-vue-grid';
 import '@progress/kendo-theme-material/dist/all.css';
 import { sp } from '@pnp/sp/presets/all';
 
 export default {
-  name: 'Organisations',
+  name: 'Places',
   components: {
-    //dropdownlist: DropDownList,
     grid: Grid,
   },
   data: function () {
@@ -68,21 +43,17 @@ export default {
       spitemsdata: [],
       dataResult: [],
       columns: [
-        { field: 'Title', title: 'Наименовение рус.' },
-        { field: 'NameEng', title: 'Наименование англ.' },
-        {
-          field: 'IsARosatom',
-          cell: 'isRosatomTemplate',
-          title: 'Организация госкорпорации',
-        },
+        { field: 'Title', title: 'Место' },
+
         { field: 'IsActive', cell: 'isActiveTemplate', title: 'Действут' },
       ],
       pageable: true,
       sortable: true,
-
+      //filterable: true,
       skip: 0,
       take: 10,
       sort: [{ field: 'Title', dir: 'asc' }],
+      //filter: null,
     };
   },
 
@@ -92,7 +63,7 @@ export default {
       take: this.take,
       sort: this.sort,
     };
-    this.spitemsdata = await this.getDataOrgs();
+    this.spitemsdata = await this.getDataPlaces();
 
     this.dataResult = process(this.spitemsdata, dataState);
   },
@@ -141,16 +112,10 @@ export default {
         filter: this.filter,
       });
     },
-    async getDataOrgs() {
+    async getDataPlaces() {
       let items = await sp.web.lists
-        .getByTitle('Organisations')
-        .items.select(
-          'Title',
-          'NameEng',
-
-          'IsRosatom',
-          'IsActive'
-        )
+        .getByTitle('Countrys')
+        .items.select('Title', 'IsActive')
         .get();
 
       console.log(items);

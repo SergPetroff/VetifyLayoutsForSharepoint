@@ -2,16 +2,21 @@
   "name": "vue2_2",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8081",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "proxy": "node ./api-server.js",
+    "startServers": "concurrently --kill-others \"npm run proxy\" \"npm run serve\""
   },
   "dependencies": {
+    "@pnp/sp": "^2.11.0",
     "@progress/kendo-data-query": "^1.5.5",
     "@progress/kendo-drawing": "^1.16.1",
     "@progress/kendo-licensing": "^1.2.1",
     "@progress/kendo-theme-default": "^4.43.0",
+    "@progress/kendo-theme-material": "^4.43.0",
     "@progress/kendo-vue-animation": "^2.7.3",
     "@progress/kendo-vue-data-tools": "^2.7.3",
     "@progress/kendo-vue-dateinputs": "^2.7.3",
@@ -30,11 +35,13 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
+    "concurrently": "^7.0.0",
     "deepmerge": "^4.2.2",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
     "sass": "~1.32",
     "sass-loader": "^12.4.0",
+    "sp-rest-proxy": "^3.3.2",
     "vue-cli-plugin-vuetify": "~2.4.5",
     "vue-template-compiler": "^2.6.11"
   },
