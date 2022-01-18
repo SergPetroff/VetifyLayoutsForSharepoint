@@ -1,5 +1,6 @@
 const path = require('path');
 module.exports = {
+  assetsDir: 'SiteAssets/VueMaster',
   publicPath: '/sites/ui', //'../SiteAssets/VueMaster',
   //transpileDependencies: ['vuetify'],
 
