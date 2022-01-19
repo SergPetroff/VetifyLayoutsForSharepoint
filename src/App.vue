@@ -79,10 +79,11 @@ import { sp } from '@pnp/sp/presets/all';
 
 sp.setup({
   sp: {
-    //baseUrl: ' http://localhost:8081/',
+    baseUrl: ' http://localhost:8081/',
     headers: {
       Accept: 'application/json;odata=verbose;charset=utf-8',
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json;odata=verbose',
+      'X-RequestDigest': '`[FORM DIGEST]`',
     },
   },
 });
@@ -163,7 +164,7 @@ export default {
   },
   mounted() {
     this.getCurrentUser();
-    this.getArrangements();
+    //this.getArrangements();
   },
 };
 </script>

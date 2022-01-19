@@ -40,6 +40,10 @@
           </td>
         </template>
       </grid>
+      <v-alert :value="alert" color="red" type="error"
+        >Возникла ошибка, перезагрузите страницу или обратитесь в
+        поддержку.</v-alert
+      >
     </div>
   </v-container>
 </template>
@@ -65,6 +69,7 @@ export default {
       //defaultItems: { CategoryID: null, CategoryName: 'Product categories' },
       //dropdownlistCategory: null,
       // products: products,
+      alert: false,
       arrangementsdata: [],
       dataResult: [],
       columns: [
@@ -152,21 +157,26 @@ export default {
       });
     },
     async getDataEmployees() {
-      let items = await sp.web.lists
-        .getByTitle('Employees')
-        .items.select(
-          'Title',
-          'FIOEng',
-          'JobPost',
-          'Organisation/Title',
-          'IsActive',
-          'Note'
-        )
-        .expand('Organisation')
-        .get();
+      try {
+        let items = await sp.web.lists
+          .getByTitle('Employees')
+          .items.select(
+            'Title',
+            'FIOEng',
+            'JobPost',
+            'Organisation/Title',
+            'IsActive',
+            'Note'
+          )
+          .expand('Organisation')
+          .get();
 
-      console.log(items);
-      return items;
+        console.log(items);
+        return items;
+      } catch (err) {
+        this.alert = true;
+        console.error(err);
+      }
     },
   },
 };
