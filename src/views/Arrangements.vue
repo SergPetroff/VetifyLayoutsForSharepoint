@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <div id="categories">
-      <v-toolbar-title>Организации</v-toolbar-title>
+      <v-toolbar-title>Мероприятия</v-toolbar-title>
       <!--  <p>
         <dropdownlist
           :data-items="categories"
@@ -29,7 +29,7 @@
           <td colspan="1">
             <input
               type="checkbox"
-              :checked="props.dataItem.IsActive"
+              :checked="props.dataItem.IsCanceled"
               disabled="disabled"
             />
           </td>
@@ -69,9 +69,22 @@
       </grid>
       <v-dialog v-model="dialog" persistent max-width="900px">
         <v-card>
-          <v-card-title>
-            <span class="text-h5">Мероприятие</span>
-          </v-card-title>
+          <v-toolbar flat color="blue lighten-5">
+            <v-icon>mdi-calendar-account-outline</v-icon>
+            <v-toolbar-title class="font-weight-light">
+              Мероприятие
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue accent-1"
+              fab
+              small
+              @click="isEditing = !isEditing"
+            >
+              <v-icon v-if="isEditing"> mdi-close </v-icon>
+              <v-icon v-else> mdi-pencil </v-icon>
+            </v-btn>
+          </v-toolbar>
           <v-card-text>
             <v-container>
               <v-row>
@@ -80,6 +93,7 @@
                     v-model="props_form.Title"
                     label="Наименование рус.*"
                     required
+                    :disabled="!isEditing"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="6">
@@ -87,10 +101,12 @@
                     v-model="props_form.NameEng"
                     label="Наименование англ."
                     hint="тут можно подсказку написать"
+                    :disabled="!isEditing"
                   ></v-text-field>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="4">
                   <v-menu
+                    :disabled="!isEditing"
                     ref="menu_startdate"
                     v-model="menu_startdate"
                     :close-on-content-click="false"
@@ -101,12 +117,14 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
+                        :disabled="!isEditing"
                         v-model="startdateFormatted"
                         label="Дата начала"
                         persistent-hint
                         prepend-icon="mdi-calendar"
                         v-bind="attrs"
                         v-on="on"
+                        readonly
                       ></v-text-field>
                     </template>
                     <v-date-picker
@@ -116,8 +134,9 @@
                     ></v-date-picker>
                   </v-menu>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="4">
                   <v-menu
+                    :disabled="!isEditing"
                     ref="menu_enddate"
                     v-model="menu_enddate"
                     :close-on-content-click="false"
@@ -128,6 +147,8 @@
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
+                        :disabled="!isEditing"
+                        readonly
                         v-model="enddateFormatted"
                         label="Дата окончания"
                         persistent-hint
@@ -143,8 +164,17 @@
                     ></v-date-picker>
                   </v-menu>
                 </v-col>
+                <v-col cols="12" md="4">
+                  <v-checkbox
+                    :disabled="!isEditing"
+                    label="Мероприятие отменено"
+                    value
+                    v-model="props_form.IsCanceled"
+                  ></v-checkbox>
+                </v-col>
                 <v-col cols="12" sm="6">
                   <v-select
+                    :disabled="!isEditing"
                     v-model="selected_place"
                     :items="places"
                     item-text="Title"
@@ -158,6 +188,7 @@
                 </v-col>
                 <v-col cols="12" sm="6">
                   <v-select
+                    :disabled="!isEditing"
                     v-model="selected_states"
                     :items="states"
                     item-text="Title"
@@ -171,6 +202,7 @@
                 </v-col>
                 <v-col cols="12" md="12">
                   <v-autocomplete
+                    :disabled="!isEditing"
                     v-model="select_experts"
                     item-text="Title"
                     item-value="Id"
@@ -183,6 +215,7 @@
 
                 <v-col cols="12" md="12">
                   <v-autocomplete
+                    :disabled="!isEditing"
                     v-model="select_experts"
                     :items="experts"
                     label="Эксперты"
@@ -197,6 +230,7 @@
                 </v-col>
                 <v-col cols="12" md="12">
                   <v-textarea
+                    :disabled="!isEditing"
                     class="mx-2"
                     label="Примечание"
                     rows="1"
@@ -212,7 +246,13 @@
             <v-btn color="blue darken-1" text @click="dialog = false">
               Закрыть
             </v-btn>
-            <v-btn color="blue darken-1" text @click="saveform">
+
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="saveform"
+              v-if="isEditing"
+            >
               Сохранить
             </v-btn>
           </v-card-actions>
@@ -241,6 +281,7 @@ export default {
   },
   data: function () {
     return {
+      isEditing: null,
       startdate: null,
       startdateFormatted: null,
       enddate: '',
@@ -290,7 +331,7 @@ export default {
           title: 'Эксперты',
           cell: 'ExpertsTemplate',
         },
-        { field: 'IsCanceled', cell: 'isActiveTemplate', title: 'Отменен' },
+        { field: 'IsCanceled', cell: 'isActiveTemplate', title: 'Отменено' },
       ],
       pageable: true,
       sortable: true,
@@ -431,6 +472,7 @@ export default {
             NameEng: dataitem.NameEng,
             StartDate: this.startdate,
             EndDate: this.enddate,
+            IsCanceled: dataitem.IsCanceled,
             PlaceId: this.selected_place ? parseInt(this.selected_place) : null,
             StateId: this.selected_states
               ? parseInt(this.selected_states)

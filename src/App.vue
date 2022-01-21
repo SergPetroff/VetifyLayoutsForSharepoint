@@ -40,7 +40,7 @@
 
     <v-app-bar app color="blue lighten-3" denset>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>ЕИС КМС</v-toolbar-title>
+      <v-toolbar-title>Название проекта</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu bottom left>
         <template v-slot:activator="{ on, attrs }">
@@ -51,16 +51,25 @@
 
         <v-list>
           <v-list-item link @click="toSiteSettings">
+            <v-list-item-icon>
+              <v-icon>mdi-tune</v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>Настройки сайта</v-list-item-title>
+              <v-list-item-title>Параметры сайта</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item link @click="toSiteContent">
+            <v-list-item-icon>
+              <v-icon>mdi-folder-multiple-outline</v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Контент сайта</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item link @click="toLogout">
+            <v-list-item-icon>
+              <v-icon>mdi-logout-variant</v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>Выйти</v-list-item-title>
             </v-list-item-content>
@@ -83,7 +92,6 @@ sp.setup({
     headers: {
       Accept: 'application/json;odata=verbose;charset=utf-8',
       'Content-Type': 'application/json;odata=verbose',
-      'X-RequestDigest': '`[FORM DIGEST]`',
     },
   },
 });
