@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-
+kendo-ui-license.txt
 # local env files
 .env.local
 .env.*.local
